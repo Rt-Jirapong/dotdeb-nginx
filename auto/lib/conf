@@ -58,19 +58,19 @@ if [ $USE_ZLIB = YES ]; then
     . auto/lib/zlib/conf
 fi
 
-if [ $USE_LIBXSLT != NO ]; then
+if [ $USE_LIBXSLT = YES ]; then
     . auto/lib/libxslt/conf
 fi
 
-if [ $USE_LIBGD != NO ]; then
+if [ $USE_LIBGD = YES ]; then
     . auto/lib/libgd/conf
 fi
 
-if [ $USE_PERL != NO ]; then
+if [ $USE_PERL = YES ]; then
     . auto/lib/perl/conf
 fi
 
-if [ $USE_GEOIP != NO ]; then
+if [ $HTTP_GEOIP = YES ]; then
     . auto/lib/geoip/conf
 fi
 

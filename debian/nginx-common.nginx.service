@@ -12,7 +12,6 @@
 #
 [Unit]
 Description=A high performance web server and a reverse proxy server
-Documentation=man:nginx(8)
 After=network.target
 
 [Service]

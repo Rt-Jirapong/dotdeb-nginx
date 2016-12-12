@@ -272,27 +272,12 @@ ngx_http_charset_header_filter(ngx_http_request_t *r)
         return ngx_http_next_header_filter(r);
     }
 
-    if (source_charset == charset) {
-        r->headers_out.content_type.len = r->headers_out.content_type_len;
-
-        ngx_http_set_charset(r, &dst);
-
-        return ngx_http_next_header_filter(r);
-    }
-
-    /* source_charset != charset */
-
-    if (r->headers_out.content_encoding
-        && r->headers_out.content_encoding->value.len)
-    {
-        return ngx_http_next_header_filter(r);
-    }
-
     mcf = ngx_http_get_module_main_conf(r, ngx_http_charset_filter_module);
     charsets = mcf->charsets.elts;
 
-    if (charsets[source_charset].tables == NULL
-        || charsets[source_charset].tables[charset] == NULL)
+    if (source_charset != charset
+        && (charsets[source_charset].tables == NULL
+            || charsets[source_charset].tables[charset] == NULL))
     {
         goto no_charset_map;
     }
@@ -301,7 +286,11 @@ ngx_http_charset_header_filter(ngx_http_request_t *r)
 
     ngx_http_set_charset(r, &dst);
 
-    return ngx_http_charset_ctx(r, charsets, charset, source_charset);
+    if (source_charset != charset) {
+        return ngx_http_charset_ctx(r, charsets, charset, source_charset);
+    }
+
+    return ngx_http_next_header_filter(r);
 
 no_charset_map:
 
@@ -321,6 +310,13 @@ ngx_http_destination_charset(ngx_http_request_t *r, ngx_str_t *name)
     ngx_http_variable_value_t     *vv;
     ngx_http_charset_loc_conf_t   *mlcf;
     ngx_http_charset_main_conf_t  *mcf;
+
+    if (!r->ignore_content_encoding
+        && r->headers_out.content_encoding
+        && r->headers_out.content_encoding->value.len)
+    {
+        return NGX_DECLINED;
+    }
 
     if (r->headers_out.content_type.len == 0) {
         return NGX_DECLINED;

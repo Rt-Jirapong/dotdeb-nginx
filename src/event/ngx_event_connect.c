@@ -14,7 +14,7 @@
 ngx_int_t
 ngx_event_connect_peer(ngx_peer_connection_t *pc)
 {
-    int                rc, type;
+    int                rc;
     ngx_int_t          event;
     ngx_err_t          err;
     ngx_uint_t         level;
@@ -27,12 +27,9 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
         return rc;
     }
 
-    type = (pc->type ? pc->type : SOCK_STREAM);
+    s = ngx_socket(pc->sockaddr->sa_family, SOCK_STREAM, 0);
 
-    s = ngx_socket(pc->sockaddr->sa_family, type, 0);
-
-    ngx_log_debug2(NGX_LOG_DEBUG_EVENT, pc->log, 0, "%s socket %d",
-                   (type == SOCK_STREAM) ? "stream" : "dgram", s);
+    ngx_log_debug1(NGX_LOG_DEBUG_EVENT, pc->log, 0, "socket %d", s);
 
     if (s == (ngx_socket_t) -1) {
         ngx_log_error(NGX_LOG_ALERT, pc->log, ngx_socket_errno,
@@ -51,8 +48,6 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
 
         return NGX_ERROR;
     }
-
-    c->type = type;
 
     if (pc->rcvbuf) {
         if (setsockopt(s, SOL_SOCKET, SO_RCVBUF,
@@ -80,30 +75,24 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
         }
     }
 
-    if (type == SOCK_STREAM) {
-        c->recv = ngx_recv;
-        c->send = ngx_send;
-        c->recv_chain = ngx_recv_chain;
-        c->send_chain = ngx_send_chain;
+    c->recv = ngx_recv;
+    c->send = ngx_send;
+    c->recv_chain = ngx_recv_chain;
+    c->send_chain = ngx_send_chain;
 
-        c->sendfile = 1;
-
-        if (pc->sockaddr->sa_family == AF_UNIX) {
-            c->tcp_nopush = NGX_TCP_NOPUSH_DISABLED;
-            c->tcp_nodelay = NGX_TCP_NODELAY_DISABLED;
-
-#if (NGX_SOLARIS)
-            /* Solaris's sendfilev() supports AF_NCA, AF_INET, and AF_INET6 */
-            c->sendfile = 0;
-#endif
-        }
-
-    } else { /* type == SOCK_DGRAM */
-        c->recv = ngx_udp_recv;
-        c->send = ngx_send;
-    }
+    c->sendfile = 1;
 
     c->log_error = pc->log_error;
+
+    if (pc->sockaddr->sa_family == AF_UNIX) {
+        c->tcp_nopush = NGX_TCP_NOPUSH_DISABLED;
+        c->tcp_nodelay = NGX_TCP_NODELAY_DISABLED;
+
+#if (NGX_SOLARIS)
+        /* Solaris's sendfilev() supports AF_NCA, AF_INET, and AF_INET6 */
+        c->sendfile = 0;
+#endif
+    }
 
     rev = c->read;
     wev = c->write;
@@ -114,6 +103,17 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
     pc->connection = c;
 
     c->number = ngx_atomic_fetch_add(ngx_connection_counter, 1);
+
+#if (NGX_THREADS)
+
+    /* TODO: lock event when call completion handler */
+
+    rev->lock = pc->lock;
+    wev->lock = pc->lock;
+    rev->own_lock = &c->lock;
+    wev->own_lock = &c->lock;
+
+#endif
 
     if (ngx_add_conn) {
         if (ngx_add_conn(c) == NGX_ERROR) {
@@ -182,10 +182,12 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
         return NGX_OK;
     }
 
-    if (ngx_event_flags & NGX_USE_IOCP_EVENT) {
+    if (ngx_event_flags & NGX_USE_AIO_EVENT) {
 
         ngx_log_debug1(NGX_LOG_DEBUG_EVENT, pc->log, ngx_socket_errno,
                        "connect(): %d", rc);
+
+        /* aio, iocp */
 
         if (ngx_blocking(s) == -1) {
             ngx_log_error(NGX_LOG_ALERT, pc->log, ngx_socket_errno,

@@ -24,7 +24,6 @@ ngx_os_io_t ngx_os_io = {
     ngx_readv_chain,
     ngx_udp_unix_recv,
     ngx_unix_send,
-    ngx_udp_unix_send,
     ngx_writev_chain,
     0
 };
@@ -41,9 +40,7 @@ ngx_os_init(ngx_log_t *log)
     }
 #endif
 
-    if (ngx_init_setproctitle(log) != NGX_OK) {
-        return NGX_ERROR;
-    }
+    ngx_init_setproctitle(log);
 
     ngx_pagesize = getpagesize();
     ngx_cacheline_size = NGX_CPU_CACHE_LINE;
@@ -64,7 +61,7 @@ ngx_os_init(ngx_log_t *log)
 
     if (getrlimit(RLIMIT_NOFILE, &rlmt) == -1) {
         ngx_log_error(NGX_LOG_ALERT, log, errno,
-                      "getrlimit(RLIMIT_NOFILE) failed");
+                      "getrlimit(RLIMIT_NOFILE) failed)");
         return NGX_ERROR;
     }
 
@@ -85,7 +82,7 @@ ngx_os_init(ngx_log_t *log)
 void
 ngx_os_status(ngx_log_t *log)
 {
-    ngx_log_error(NGX_LOG_NOTICE, log, 0, NGINX_VER_BUILD);
+    ngx_log_error(NGX_LOG_NOTICE, log, 0, NGINX_VER);
 
 #ifdef NGX_COMPILER
     ngx_log_error(NGX_LOG_NOTICE, log, 0, "built by " NGX_COMPILER);

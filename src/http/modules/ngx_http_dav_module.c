@@ -212,10 +212,7 @@ ngx_http_dav_put_handler(ngx_http_request_t *r)
         return;
     }
 
-    if (ngx_http_map_uri_to_path(r, &path, &root, 0) == NULL) {
-        ngx_http_finalize_request(r, NGX_HTTP_INTERNAL_SERVER_ERROR);
-        return;
-    }
+    ngx_http_map_uri_to_path(r, &path, &root, 0);
 
     path.len--;
 
@@ -255,7 +252,7 @@ ngx_http_dav_put_handler(ngx_http_request_t *r)
     ext.log = r->connection->log;
 
     if (r->headers_in.date) {
-        date = ngx_parse_http_time(r->headers_in.date->value.data,
+        date = ngx_http_parse_time(r->headers_in.date->value.data,
                                    r->headers_in.date->value.len);
 
         if (date != NGX_ERROR) {
@@ -323,9 +320,7 @@ ngx_http_dav_delete_handler(ngx_http_request_t *r)
 
 ok:
 
-    if (ngx_http_map_uri_to_path(r, &path, &root, 0) == NULL) {
-        return NGX_HTTP_INTERNAL_SERVER_ERROR;
-    }
+    ngx_http_map_uri_to_path(r, &path, &root, 0);
 
     ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
                    "http delete filename: \"%s\"", path.data);
@@ -493,9 +488,6 @@ ngx_http_dav_mkcol_handler(ngx_http_request_t *r, ngx_http_dav_loc_conf_t *dlcf)
     }
 
     p = ngx_http_map_uri_to_path(r, &path, &root, 0);
-    if (p == NULL) {
-        return NGX_HTTP_INTERNAL_SERVER_ERROR;
-    }
 
     *(p - 1) = '\0';
     r->uri.len--;
@@ -621,11 +613,11 @@ destination_done:
     if ((r->uri.data[r->uri.len - 1] == '/' && *(last - 1) != '/')
         || (r->uri.data[r->uri.len - 1] != '/' && *(last - 1) == '/'))
     {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                      "both URI \"%V\" and \"Destination\" URI \"%V\" "
-                      "should be either collections or non-collections",
-                      &r->uri, &dest->value);
-        return NGX_HTTP_CONFLICT;
+         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                       "both URI \"%V\" and \"Destination\" URI \"%V\" "
+                       "should be either collections or non-collections",
+                       &r->uri, &dest->value);
+         return NGX_HTTP_CONFLICT;
     }
 
     depth = ngx_http_dav_depth(r, NGX_HTTP_DAV_INFINITY_DEPTH);
@@ -674,9 +666,7 @@ destination_done:
 
 overwrite_done:
 
-    if (ngx_http_map_uri_to_path(r, &path, &root, 0) == NULL) {
-        return NGX_HTTP_INTERNAL_SERVER_ERROR;
-    }
+    ngx_http_map_uri_to_path(r, &path, &root, 0);
 
     ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
                    "http copy from: \"%s\"", path.data);
@@ -684,9 +674,7 @@ overwrite_done:
     uri = r->uri;
     r->uri = duri;
 
-    if (ngx_http_map_uri_to_path(r, &copy.path, &root, 0) == NULL) {
-        return NGX_HTTP_INTERNAL_SERVER_ERROR;
-    }
+    ngx_http_map_uri_to_path(r, &copy.path, &root, 0);
 
     r->uri = uri;
 

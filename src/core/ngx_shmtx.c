@@ -101,7 +101,6 @@ ngx_shmtx_lock(ngx_shmtx_t *mtx)
             (void) ngx_atomic_fetch_add(mtx->wait, 1);
 
             if (*mtx->lock == 0 && ngx_atomic_cmp_set(mtx->lock, 0, ngx_pid)) {
-                (void) ngx_atomic_fetch_add(mtx->wait, -1);
                 return;
             }
 
@@ -175,7 +174,7 @@ ngx_shmtx_wakeup(ngx_shmtx_t *mtx)
 
         wait = *mtx->wait;
 
-        if ((ngx_atomic_int_t) wait <= 0) {
+        if (wait == 0) {
             return;
         }
 
@@ -259,7 +258,7 @@ ngx_shmtx_trylock(ngx_shmtx_t *mtx)
 
 #if __osf__ /* Tru64 UNIX */
 
-    if (err == NGX_EACCES) {
+    if (err == NGX_EACCESS) {
         return 0;
     }
 

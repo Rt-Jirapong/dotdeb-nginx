@@ -49,23 +49,18 @@ END
         fi
     fi
 
+    rm -rf $NGX_AUTOTEST*
+
     if [ $ngx_found = no ]; then
-        if [ $ngx_try = $ngx_type ]; then
-            echo $ngx_n " $ngx_try not found$ngx_c"
-        else
-            echo $ngx_n ", $ngx_try not found$ngx_c"
-        fi
+        echo $ngx_n " $ngx_try not found$ngx_c"
 
         echo "----------"    >> $NGX_AUTOCONF_ERR
         cat $NGX_AUTOTEST.c  >> $NGX_AUTOCONF_ERR
         echo "----------"    >> $NGX_AUTOCONF_ERR
         echo $ngx_test       >> $NGX_AUTOCONF_ERR
         echo "----------"    >> $NGX_AUTOCONF_ERR
-    fi
 
-    rm -rf $NGX_AUTOTEST*
-
-    if [ $ngx_found != no ]; then
+    else
         break
     fi
 done
