@@ -1,35 +1,35 @@
-nginx (1.10.2-1~jessie) jessie; urgency=low
+nginx (%%MAIN_VERSION%%-%%MAIN_RELEASE%%~%%CODENAME%%) %%CODENAME%%; urgency=low
 
   * 1.10.2
 
  -- Konstantin Pavlov <thresh@nginx.com>  Tue, 18 Oct 2016 17:30:00 +0300
 
-nginx (1.10.1-1~jessie) jessie; urgency=low
+nginx (1.10.1-1~%%CODENAME%%) %%CODENAME%%; urgency=low
 
   * 1.10.1
 
  -- Konstantin Pavlov <thresh@nginx.com>  Tue, 31 May 2016 16:30:00 +0300
 
-nginx (1.10.0-1~jessie) jessie; urgency=low
+nginx (1.10.0-1~%%CODENAME%%) %%CODENAME%%; urgency=low
 
   * 1.10.0
 
  -- Konstantin Pavlov <thresh@nginx.com>  Tue, 26 Apr 2016 17:10:00 +0300
 
-nginx (1.9.15-1~jessie) jessie; urgency=low
+nginx (1.9.15-1~%%CODENAME%%) %%CODENAME%%; urgency=low
 
   * 1.9.15
   * njs updated to 1c50334fbea6.
 
  -- Konstantin Pavlov <thresh@nginx.com>  Tue, 19 Apr 2016 20:10:00 +0300
 
-nginx (1.9.14-1~jessie) jessie; urgency=low
+nginx (1.9.14-1~%%CODENAME%%) %%CODENAME%%; urgency=low
 
   * 1.9.14
 
  -- Konstantin Pavlov <thresh@nginx.com>  Tue, 05 Apr 2016 17:30:00 +0300
 
-nginx (1.9.13-1~jessie) jessie; urgency=low
+nginx (1.9.13-1~%%CODENAME%%) %%CODENAME%%; urgency=low
 
   * 1.9.13
   * Fixed modules path
@@ -37,7 +37,7 @@ nginx (1.9.13-1~jessie) jessie; urgency=low
 
  -- Konstantin Pavlov <thresh@nginx.com>  Tue, 29 Mar 2016 15:50:00 +0300
 
-nginx (1.9.12-1~jessie) jessie; urgency=low
+nginx (1.9.12-1~%%CODENAME%%) %%CODENAME%%; urgency=low
 
   * 1.9.12
   * common configure args are now in variable
