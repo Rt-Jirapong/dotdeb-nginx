@@ -1,0 +1,6 @@
+9d6544256dde437b09b80317513031f2  usr/sbin/nginx
+619069bea14fa8f611578e9d61260cd5  usr/share/doc/nginx-full/changelog.Debian.gz
+09161a72a9c29a84aca8fe259fb7c89c  usr/share/doc/nginx-full/changelog.gz
+e95cfc45eeb7e4f2abe0ff81b8724b08  usr/share/doc/nginx-full/copyright
+cd732356977e5e90d752758edf88af23  usr/share/lintian/overrides/nginx-full
+f6dd021325286f71bf656a6fdd2ce941  usr/share/man/man8/nginx.8.gz

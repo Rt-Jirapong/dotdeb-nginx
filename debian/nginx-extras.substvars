@@ -1,0 +1,4 @@
+perl:Depends=perl (>= 5.20.2-3+deb8u6), perlapi-5.20.2
+misc:Pre-Depends=multiarch-support
+shlibs:Depends=libc6 (>= 2.14), libexpat1 (>= 2.0.1), libgd3 (>= 2.1.0~alpha~), libgeoip1, libluajit-5.1-2, libpam0g (>= 0.99.7.1), libpcre3 (>= 1:8.35), libperl5.20 (>= 5.20.2), libssl1.0.0 (>= 1.0.2~beta3), libxml2 (>= 2.7.4), libxslt1.1 (>= 1.1.25), zlib1g (>= 1:1.1.4)
+misc:Depends=

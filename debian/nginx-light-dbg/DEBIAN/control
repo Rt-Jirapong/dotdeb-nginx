@@ -1,0 +1,19 @@
+Package: nginx-light-dbg
+Source: nginx
+Version: 1.9.10-1~bpo8+4
+Architecture: amd64
+Maintainer: Kartik Mistry <kartik@debian.org>
+Installed-Size: 2428
+Depends: nginx-light (= 1.9.10-1~bpo8+4)
+Conflicts: nginx-extras-dbg, nginx-full-dbg
+Section: debug
+Priority: extra
+Homepage: http://nginx.net
+Description: nginx web/proxy server (basic version) - debugging symbols
+ Nginx ("engine X") is a high-performance web and reverse proxy server
+ created by Igor Sysoev. It can be used both as a standalone web server
+ and as a proxy to reduce the load on back-end HTTP or mail servers.
+ .
+ This package provides debugging symbols for nginx-light, to assist in
+ debugging issues that you may find. It should not be required for normal
+ operation.

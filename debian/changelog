@@ -1,115 +1,307 @@
-nginx (1.10.2-2~dotdeb+8.2) stable; urgency=medium
-
-  * Fix a Security Regression
-
- -- Guillaume Plessis <gui@dotdeb.org>  Fri, 28 Oct 2016 05:39:42 +0000
-
-nginx (1.10.2-2~dotdeb+8.1) stable; urgency=medium
+nginx (1.9.10-1~bpo8+4) jessie-backports; urgency=high
 
   [ Christos Trochalakis ]
   * debian/nginx-common.postinst:
-    + Secure log file handling (owner & permissions) against privilege
-      escalation attacks. /var/log/nginx is now owned by root:adm.
-      Thanks Dawid Golunski (http://legalhackers.com) for the report.
+    + CVE-2016-1247: Secure log file handling (owner & permissions)
+      against privilege escalation attacks. /var/log/nginx is now owned
+      by root:adm. Thanks ro Dawid Golunski for the report.
       Changing /var/log/nginx permissions effectively reopens #701112,
       since log files can be world-readable. This is a trade-off until
       a better log opening solution is implemented upstream (trac:376).
+      (Closes: #842295)
+
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Thu, 20 Oct 2016 09:49:25 +0300
+
+nginx (1.9.10-1~bpo8+3) jessie-backports; urgency=medium
+
+  [ Christos Trochalakis ]
   * debian/control:
-    Don't allow building against liblua5.1-0-dev on architectures
-    that libluajit is available. (Closes: #826167)
+    + Build against openssl 1.0.2 enabling ALPN support
+      for http/2.
 
- -- Guillaume Plessis <gui@dotdeb.org>  Thu, 27 Oct 2016 18:17:42 +0000
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Wed, 13 Jul 2016 11:51:31 +0300
 
-nginx (1.10.2-1~dotdeb+8.1) stable; urgency=medium
+nginx (1.9.10-1~bpo8+2) jessie-backports; urgency=medium
 
-  * Imported Upstream version 1.10.2
+  [ Christos Trochalakis ]
+  * debian/patches:
+    Backports upstream patch fixing CVE-2016-4450
+    NULL pointer dereference while writing client request body.
+    (Closes: #825960)
 
- -- Guillaume Plessis <gui@dotdeb.org>  Tue, 18 Oct 2016 23:34:27 +0000
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Wed, 01 Jun 2016 14:36:46 +0300
 
-nginx (1.10.1-1~dotdeb+8.2) stable; urgency=medium
+nginx (1.9.10-1~bpo8+1) jessie-backports; urgency=medium
 
-  * Generate dbgsym packages only if dh_strip supports it
-  * naxsi is back!
-  * nginx-upload-progress now loads perfectly
+  * Rebuild for jessie-backports.
 
- -- Guillaume Plessis <gui@dotdeb.org>  Fri, 03 Jun 2016 23:58:31 +0000
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Wed, 10 Feb 2016 13:15:31 +0200
 
-nginx (1.10.1-1~dotdeb+8.1) stable; urgency=medium
+nginx (1.9.10-1) unstable; urgency=medium
 
-  * Imported Upstream version 1.10.1
-  * ngx_pagespeed 1.11.33.2
+  [ Christos Trochalakis ]
+  * New upstream release (1.9.10) (Closes: #812806)
+  * debian/control:
+    + Drop python dependency from nginx-common. (Closes: #808699)
 
- -- Guillaume Plessis <gui@dotdeb.org>  Wed, 01 Jun 2016 02:55:05 +0000
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Tue, 26 Jan 2016 20:12:06 +0200
 
-nginx (1.10.0-1~dotdeb+8.1) stable; urgency=medium
+nginx (1.9.9-1) unstable; urgency=medium
 
-  * Imported Upstream version 1.10.0
-  * ngx_pagespeed 1.11.33.1
+  [ Michael Lustfield ]
+  * debian/nginx-common.nginx.logrotate:
+    + Switching logrotate to 14 days. (Closes: #805322)
 
- -- Guillaume Plessis <gui@dotdeb.org>  Sat, 07 May 2016 17:28:42 -0800
+  [ Christos Trochalakis ]
+  * New upstream release (1.9.9).
+  * debian/modules/nginx-lua:
+    + Update nginx-lua to v0.10.0.
 
-nginx (1.8.1-1~dotdeb+8.1) stable; urgency=medium
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Thu, 14 Jan 2016 10:40:35 +0200
 
-  * Imported Upstream version 1.8.1
-  * ngx_pagespeed 1.10.33.2
+nginx (1.9.6-2) unstable; urgency=medium
 
- -- Guillaume Plessis <gui@dotdeb.org>  Tue, 26 Jan 2016 13:00:50 -0800
+  [ Christos Trochalakis]
+  * debian/modules/nginx-lua:
+    + Update nginx-lua to v0.9.19 fixing HTTP/2 compatibility.
 
-nginx (1.8.0-1~dotdeb+8.2) stable; urgency=medium
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Fri, 13 Nov 2015 16:08:01 +0200
 
-  * nginx-push-stream 0.5.1. Close #62
-  * ngx-conf in /usr/sbin. Close #66
-  * ngx_pagespeed 1.9.32.4. Fixes #68
+nginx (1.9.6-1) unstable; urgency=medium
 
- -- Guillaume Plessis <gui@dotdeb.org>  Wed, 17 Jun 2015 14:50:19 -0700
+  [ Christos Trochalakis]
+  * New upstream release.
+  * Enable http2 module in nginx-full & nginx-extras
 
-nginx (1.8.0-1~dotdeb+8.1) oldstable; urgency=medium
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Tue, 03 Nov 2015 08:59:21 +0200
 
-  * Imported Upstream version 1.8.0
-  * syslog support is now upstream
-  * Thread pool support
-  * Sync with Debian
+nginx (1.9.4-1) unstable; urgency=medium
 
- -- Guillaume Plessis <gui@dotdeb.org>  Sat, 25 Apr 2015 20:39:38 -0700
+  [ Christos Trochalakis]
+  * New upstream release.
+  * debian/copyright:
+    + Fix licence order.
 
-nginx (1.6.3-1~dotdeb+wheezy.1) stable; urgency=medium
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Mon, 24 Aug 2015 16:23:20 +0300
 
-  * Modules update
-  * Imported Upstream version 1.6.3
-  * generic Dockerfile to ease Debian packaging
-  * gbp.conf
+nginx (1.9.3-1) unstable; urgency=medium
 
- -- Guillaume Plessis <gui@dotdeb.org>  Wed, 08 Apr 2015 11:47:13 -0700
+  [ Christos Trochalakis]
+  * New upstream Release. (Closes: #789924)
+  * debian/control:
+    + Remove XS-Testsuite header, it is now automatically added when
+      `debian/tests/control` is present.
+  * debian/modules/nginx-lua:
+    + Update nginx-lua to v0.9.16 and drop our backported patches.
+  * debian/conf/*:
+    + Add REQUEST_SCHEME to fcgi, wsgi and scgi configs (sync with upstream).
 
-nginx (1.6.2-1~dotdeb.1) stable; urgency=medium
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Tue, 14 Jul 2015 20:24:52 +0300
 
-  * Imported Upstream version 1.6.2
-  * Patches refresh for 1.6.2
-  * ngx_pagespeed 1.9.32.1
-  * Modules update
-  * nginx-rtmp-module added to nginx-extras
+nginx (1.9.2-1) unstable; urgency=medium
 
- -- Guillaume Plessis <gui@dotdeb.org>  Tue, 16 Sep 2014 23:11:44 -0700
+  [ Michael Lustfield ]
+  * debian/nginx-common.nginx.init:
+    + Init script now returns the proper exit status. (Closes: #788573)
+    + Cleaned up the init script to have consistent naming/structure.
 
-nginx (1.6.1-1~dotdeb.1) stable; urgency=medium
+  [ Christos Trochalakis ]
+  * New upstream Release.
+  * debian/rules:
+    + Add stream module to nginx-full & nginx-extras.
+    + Add thread pool support to nginx-full & nginx-extras.
+  * debian/modules/nginx-lua:
+    + Backport upstream's 9531e5e7 fixing build failure when thread pool
+      support is enabled.
 
-  * New upstream release
-  * Sync with Debian
-  * Modules update
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Mon, 22 Jun 2015 10:16:19 +0300
 
- -- Guillaume Plessis <gui@dotdeb.org>  Thu, 14 Aug 2014 15:54:42 +0200
+nginx (1.9.1-1) unstable; urgency=medium
 
-nginx (1.6.0-1~dotdeb.2) stable; urgency=medium
+  [ Michael Lustfield ]
+  * debian/conf/nginx.conf:
+    + Switch worker_processes to auto. (Closes: #781711)
+  * debian/conf/sites-available/default:
+    + Add comment about disabling gzip in HTTPS. (Closes: #773332)
+    + Add comment about checking ssl_ciphers. (Closes: #765782)
+  * debian/modules/*:
+    + Updated nginx-auth-pam 1.3 -> 1.4. (Closes: #777120)
+    + Updated nginx-echo v0.56 -> v0.57.
+    + Updated nginx-lua v0.9.13 -> v0.9.15.
+    + Updated nginx-cache-purge 2.1 -> 2.3.
+    + Updated ngx-fancyindex v0.3.4 -> v0.3.5.
+  * debian/nginx-common.NEWS:
+    + Document potential issues with newer versions on i386.
+  * debian/nginx-common.{dirs,install}, debian/vim/*:
+    + Installing vim syntax highlighting from package. (Closes: #771609)
+      Thanks Emmanuel Bouthenot for building this patch.
+  * debian/nginx-common.nginx.upstart:
+    + Created file to support upstart jobs. (Closes: #745483)
+      Thanks Cameron Norman for building this file.
+  * debian/rules:
+    + Add hardening flags with dpkg-buildflags. (Closes: #747025, #781703)
+      Thanks Thomas Ward.
+    + Supply custom DEB_BUILD_MAINT_OPTIONS for debian_ldflags generation.
+      Thanks Thomas Ward.
+    + Added back missing module gunzip. (Closes: #782065)
+      Thanks Peter Wu for the initial patch.
+  * debian/modules/nginx-lua/*:
+    + Updated module version. (Closes: #762494)
+  * debian/ngx-conf/*
+    + Added configuration utility, not shipped yet. (Closes: #652108)
+  * debian/nginx-common.manpages:
+    + Replaced man page with upstream maintained version. (Closes: #781345)
+  * debian/nginx-common.install:
+    + Changed debian/index.html -> html/index.html. This installs the package
+      maintained version of this file as opposed to our out of date version.
 
-  * ngx_pagespeed security upgrade
+  [ Christos Trochalakis ]
+  * New upstream release. Switching to mainline version. (Closes: #777677)
+  * debian/nginx-common.manpages:
+    + Build & ship manpages with binary packages.
+  * debian/rules:
+    + Adjust configure flags for limit_zone module (renamed to limit_conn).
+  * debian/modules/nginx-lua:
+    + Backport upstream's f4e1311 fixing build failure with mainline nginx.
+  * debian/control:
+    + Depend on libgd-dev now that jessie is released.
 
- -- Guillaume Plessis <gui@dotdeb.org>  Fri, 27 Jun 2014 07:32:42 -0700
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Fri, 12 Jun 2015 15:42:49 +0300
 
-nginx (1.6.0-1~dotdeb.1) stable; urgency=medium
+nginx (1.6.2-5) unstable; urgency=medium
 
-  * Rebuilt for Dotdeb
+  [ Christos Trochalakis ]
+  * debian/conf/nginx.conf:
+    + Drop SSLv3 protocol (POODLE), and prefer server ciphers
+      by default. (Closes: #767456)
+  * debian/copyright:
+    + Add copyright for ngx_http_substitutions_filter_module.
+  * debian/nginx-common.{preinst,postinst,postrm}:
+    + Remove /etc/nginx/naxsi-ui.conf conffile. (Closes: #768233)
+  * debian/README.Debian:
+    + Add a list of important changes since wheezy.
 
- -- Guillaume Plessis <gui@dotdeb.org>  Fri, 09 May 2014 15:23:42 -0700
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Sun, 30 Nov 2014 10:39:55 +0200
+
+nginx (1.6.2-4) unstable; urgency=medium
+
+  [ Christos Trochalakis ]
+  * debian/modules/nginx-development-kit:
+    + Upgrade v0.2.17-7-g24202b4 -> v0.2.19
+  * debian/modules/nginx-echo:
+    + Upgrade v0.51 -> v0.56
+  * debian/modules/nginx-upload-progress:
+    + Upgrade v0.9.0-0-ga788dea -> 0.9.1
+  * debian/modules/ngx-fancy-index:
+    + Upgrade v0.3.3 -> v0.3.4
+  * debian/copyright:
+    + Rewrite copyright file fixing various issues.
+  * debian/nginx-common.nginx.logrotate:
+    + Switch postrotate to the initscript's rotate command.
+
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Sun, 19 Oct 2014 08:23:33 +0300
+
+nginx (1.6.2-3) unstable; urgency=medium
+
+  [ Christos Trochalakis ]
+  * Change the default document root to /var/www/html according to debian
+    policy 3.9.6.0. (Closes: #730382)
+  * Provide a new, debian specific, default landing page.
+  * debian/nginx-common.nginx.service:
+    + Graceful stopping of nginx was not handled correctly with systemd.
+  * debian/nginx-common.nginx.init:
+    + Gracefully stop nginx by default, we are switcing to a configurable
+      STOP/5/TERM/5/KILL/5 schedule. We are now in sync with the systemd
+      service file. (Closes: #762708)
+  * debian/conf:
+    + Introduce a `snippets/fastcgi-php.conf` snippet with a basic
+      php configuration that can be included when needed. (Closes: #762491)
+    + Introduce a `snippets/snakeoil.conf` snippet that enabled https
+      using the certs installed by the ssl-cert package.
+    + Suggest disabling SSLv3 in default site with a ref to POODLE.
+  * debian/control:
+    + nginx-common now suggests ssl-cert.
+
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Thu, 16 Oct 2014 13:34:29 +0300
+
+nginx (1.6.2-2) unstable; urgency=medium
+
+  [ Christos Trochalakis ]
+  * Drop nginx-naxsi, nginx-naxsi-dbg, nginx-naxsi-ui packages.
+    (Closes: #746199, #737146, #712445)
+  * debian/conf/nginx.conf:
+    + Remove relic passenger stanga.
+
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Fri, 26 Sep 2014 11:06:47 +0300
+
+nginx (1.6.2-1) unstable; urgency=high
+
+  [ Christos Trochalakis ]
+  * New upstream release.
+    CVE-2014-3616: "it was possible to reuse SSL sessions in unrelated
+    contexts if a shared SSL session cache or the same TLS session ticket
+    key was used for multiple "server" blocks".
+    (Closes: #761940)
+
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Wed, 17 Sep 2014 11:19:01 +0300
+
+nginx (1.6.1-2) unstable; urgency=medium
+
+  [ Christos Trochalakis ]
+  * debian/control:
+    + Build nginx-extras against luajit (Closes: #755875)
+  * debian/modules/nginx-lua:
+    + Update nginx-lua to v0.9.12
+  * debian/nginx-common.nginx.init:
+    + Better pidfile extraction from nginx.conf (Closes: #747329)
+  * debian/conf/mime.types:
+    + Upgrade to the latest upstream mime types.
+      As a consequence, nginx now uses "application/javascript" for
+      javascript files.
+  * debian/conf/nginx.conf:
+    + Add application/javascript to the gzip_types list. (Closes: #737176)
+  * debian/rules:
+    + Make naxsi module first in configure parameters.
+      Fixes erratic naxsi behaviour. (Closes: #758642)
+  * debian/conf/{koi-utf,koi-win,scgi_params,uwsgi_params}:
+    + Sync with upstream config files.
+  * debian/conf/fastcgi_params:
+    + Sync with upstream and remove `SCRIPT_FILENAME` parameter.
+      This change might break fastcgi sites. (Closes: #718639)
+  + debian/conf/fastcgi.conf:
+    + Ship upstream file.
+  * debian/nginx-common.NEWS:
+    + Document syncing conf files with upstream.
+  * debian/tests/control:
+    + Include some simple autopkgtests.
+      Thanks to Robie Basak for the initial patch. (Closes: #756391)
+  * debian/modules/nginx-http-push:
+    + Update to v0.73.
+      Fixes fd leak on reload. (Closes: #745921)
+
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Thu, 04 Sep 2014 13:00:46 +0300
+
+nginx (1.6.1-1) unstable; urgency=medium
+
+  [ Christos Trochalakis ]
+  * New upstream release.
+    Handle CVE-2014-3556 SMTP STARTTLS vulnerability (Closes: #757196)
+    http://mailman.nginx.org/pipermail/nginx-announce/2014/000144.html
+
+ -- Christos Trochalakis <yatiohi@ideopolis.gr>  Wed, 06 Aug 2014 10:05:08 +0300
+
+nginx (1.6.0-2) unstable; urgency=medium
+
+  [ gregor herrmann ]
+  * Patch from Gregor Herrmann <gregoa@debian.org>:
+    Fix "hardcodes /usr/lib/perl5":
+    - drop debian/nginx-extras.dirs, not needed, dh_install uses the
+      directories from debian/nginx-extras.install
+    - make debian/nginx-extras.install executable, and use $Config{vendorarch}
+      for the perl library path there
+    (Closes: #752796)
+
+ -- Kartik Mistry <kartik@debian.org>  Tue, 29 Jul 2014 04:56:03 +0000
 
 nginx (1.6.0-1) unstable; urgency=medium
 

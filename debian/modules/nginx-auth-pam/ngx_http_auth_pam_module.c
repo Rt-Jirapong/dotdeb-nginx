@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 Sergio Talens-Oliag <sto@iti.es>
+ * Copyright (C) 2008-2015 Sergio Talens-Oliag <sto@iti.es>
  *
  * Based on nginx's 'ngx_http_auth_basic_module.c' by Igor Sysoev and apache's
  * 'mod_auth_pam.c' by Ingo Luetkebolhe.
@@ -19,12 +19,11 @@ typedef struct {
     ngx_str_t  passwd;
 } ngx_http_auth_pam_ctx_t;
 
-/* PAM authinfo */
+/* PAM userinfo */
 typedef struct {
     ngx_str_t  username;
     ngx_str_t  password;
-    ngx_log_t  *log;
-} ngx_pam_authinfo;
+} ngx_pam_userinfo;
 
 /* Module configuration struct */
 typedef struct {
@@ -152,14 +151,14 @@ ngx_auth_pam_talker(int num_msg, const struct pam_message ** msg,
                     struct pam_response ** resp, void *appdata_ptr)
 {
     int  i;
-    ngx_pam_authinfo  *ainfo;
+    ngx_pam_userinfo  *uinfo;
     struct pam_response  *response;
 
-    ainfo = (ngx_pam_authinfo *) appdata_ptr;
+    uinfo = (ngx_pam_userinfo *) appdata_ptr;
     response = NULL;
 
     /* parameter sanity checking */
-    if (!resp || !msg || !ainfo)
+    if (!resp || !msg || !uinfo)
         return PAM_CONV_ERR;
 
     /* allocate memory to store response */
@@ -177,18 +176,10 @@ ngx_auth_pam_talker(int num_msg, const struct pam_message ** msg,
         switch (msg[i]->msg_style) {
         case PAM_PROMPT_ECHO_ON:
             /* on memory allocation failure, auth fails */
-            response[i].resp = strdup((const char *)ainfo->username.data);
+            response[i].resp = strdup((const char *)uinfo->username.data);
             break;
         case PAM_PROMPT_ECHO_OFF:
-            response[i].resp = strdup((const char *)ainfo->password.data);
-            break;
-	case PAM_ERROR_MSG:
-            ngx_log_error(NGX_LOG_ERR, ainfo->log, 0,
-                          "PAM: \'%s\'.", msg[i]->msg);
-            break;
-        case PAM_TEXT_INFO:
-            ngx_log_error(NGX_LOG_INFO, ainfo->log, 0,
-                          "PAM: \'%s\'.", msg[i]->msg);
+            response[i].resp = strdup((const char *)uinfo->password.data);
             break;
         default:
             free_resp(i, response);
@@ -286,7 +277,7 @@ ngx_http_auth_pam_authenticate(ngx_http_request_t *r,
     ngx_int_t   rc;
     ngx_http_auth_pam_loc_conf_t  *alcf;
 
-    ngx_pam_authinfo  ainfo;
+    ngx_pam_userinfo  uinfo;
     struct pam_conv   conv_info;        /* PAM struct */
     pam_handle_t      *pamh;
     u_char            *service_name;
@@ -312,16 +303,14 @@ ngx_http_auth_pam_authenticate(ngx_http_request_t *r,
     p = ngx_cpymem(uname_buf, r->headers_in.user.data , len);
     *p ='\0';
 
-    ainfo.username.data = uname_buf;
-    ainfo.username.len  = len;
+    uinfo.username.data = uname_buf;
+    uinfo.username.len  = len;
 
-    ainfo.password.data = r->headers_in.passwd.data;
-    ainfo.password.len  = r->headers_in.passwd.len;
-
-    ainfo.log = r->connection->log;
+    uinfo.password.data = r->headers_in.passwd.data;
+    uinfo.password.len  = r->headers_in.passwd.len;
 
     conv_info.conv = &ngx_auth_pam_talker;
-    conv_info.appdata_ptr = (void *) &ainfo;
+    conv_info.appdata_ptr = (void *) &uinfo;
 
     pamh = NULL;
 
@@ -332,7 +321,7 @@ ngx_http_auth_pam_authenticate(ngx_http_request_t *r,
         service_name = alcf->service_name.data;
     }
     if ((rc = pam_start((const char *) service_name,
-                        (const char *) ainfo.username.data,
+                        (const char *) uinfo.username.data,
                         &conv_info,
                         &pamh)) != PAM_SUCCESS) {
         ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
@@ -350,7 +339,7 @@ ngx_http_auth_pam_authenticate(ngx_http_request_t *r,
                                PAM_DISALLOW_NULL_AUTHTOK)) != PAM_SUCCESS) {
         ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
                       "PAM: user '%s' - not authenticated: %s",
-                      ainfo.username.data, pam_strerror(pamh, rc));
+                      uinfo.username.data, pam_strerror(pamh, rc));
         pam_end(pamh, PAM_SUCCESS);
         return ngx_http_auth_pam_set_realm(r, &alcf->realm);
     }   /* endif authenticate */
@@ -359,7 +348,7 @@ ngx_http_auth_pam_authenticate(ngx_http_request_t *r,
     if ((rc = pam_acct_mgmt(pamh, PAM_DISALLOW_NULL_AUTHTOK)) != PAM_SUCCESS) {
         ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
                       "PAM: user '%s'  - invalid account: %s",
-                      ainfo.username.data, pam_strerror(pamh, rc));
+                      uinfo.username.data, pam_strerror(pamh, rc));
         pam_end(pamh, PAM_SUCCESS);
         return ngx_http_auth_pam_set_realm(r, &alcf->realm);
     }

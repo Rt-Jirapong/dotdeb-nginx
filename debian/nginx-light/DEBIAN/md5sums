@@ -1,0 +1,6 @@
+dee2621331133985a57e978b17c3157a  usr/sbin/nginx
+619069bea14fa8f611578e9d61260cd5  usr/share/doc/nginx-light/changelog.Debian.gz
+09161a72a9c29a84aca8fe259fb7c89c  usr/share/doc/nginx-light/changelog.gz
+e95cfc45eeb7e4f2abe0ff81b8724b08  usr/share/doc/nginx-light/copyright
+cf7511985f824dec29194b79d2aa7333  usr/share/lintian/overrides/nginx-light
+f6dd021325286f71bf656a6fdd2ce941  usr/share/man/man8/nginx.8.gz
